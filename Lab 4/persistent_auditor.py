@@ -55,6 +55,7 @@ def generate_report(total_units, failed_attempts):
 
 
 inventory = load_inventory()
+transaction_history = []  # NEW: tracks every valid delivery amount this session
 failed_entries = 0
 deliveries_processed = 0
 
@@ -71,6 +72,7 @@ while True:
         continue
 
     inventory = process_delivery(inventory, stock)
+    transaction_history.append(stock)  # NEW: record this transaction
 
     tax = calculate_tax(stock)
 
@@ -78,5 +80,8 @@ while True:
 
     print("Stock accepted. Current inventory:", inventory)
     print("Tax for this delivery:", tax)
+
+# NEW: verify the history list is tracking correctly before saving is added
+print("\nTransaction history this session:", transaction_history)
 
 generate_report(deliveries_processed, failed_entries)
