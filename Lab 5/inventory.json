@@ -1,0 +1,17 @@
+{
+    "products": [
+        {
+            "name": "laptop",
+            "price": 100.0,
+            "quantity": 10
+        }
+    ],
+    "transactions": [
+        {
+            "product": "laptop",
+            "type": "initial stock",
+            "quantity": 10,
+            "amount": 1000.0
+        }
+    ]
+}

@@ -76,7 +76,7 @@ def display_all(inv):
     print(f"\nTotal sales so far: ${total_sales:.2f}")
 
 
-# ---------- Data Persistence: Load ----------
+# ---------- Data Persistence ----------
 def load_inventory():
     """Load inventory.json if it exists; otherwise start empty."""
     if os.path.exists(FILENAME):
@@ -92,18 +92,78 @@ def load_inventory():
     return {"products": [], "transactions": []}
 
 
-# ---------- Temporary test (Part 2) ----------
-if __name__ == "__main__":
+def save_inventory(inv):
+    """Write the inventory (products + transaction history) to inventory.json."""
+    try:
+        with open(FILENAME, "w") as file:
+            json.dump(inv, file, indent=4)
+        print(f"Inventory saved to {FILENAME}.")
+    except OSError as error:
+        print(f"Error saving inventory: {error}")
+
+
+# ---------- Menu System ----------
+def get_number(prompt, number_type=float):
+    """Keep asking until the user enters a valid number."""
+    while True:
+        try:
+            return number_type(input(prompt))
+        except ValueError:
+            print("Invalid number, try again.")
+
+
+def show_menu():
+    print("\n===== INVENTORY MENU =====")
+    print("1. Display")
+    print("2. Add")
+    print("3. Update")
+    print("4. Search")
+    print("5. Save")
+    print("6. Exit")
+
+
+def main():
     inventory = load_inventory()
 
-    # First run: file doesn't exist, so create sample data and write it manually
-    # (temporary, because save_inventory() doesn't exist yet)
-    if not inventory["products"]:
-        add_product(inventory, "Notebook", 2.50, 100)
-        add_product(inventory, "Pen", 1.20, 250)
-        add_product(inventory, "Backpack", 35.00, 20)
-        with open(FILENAME, "w") as f:
-            json.dump(inventory, f, indent=4)
-        print("Sample data written to inventory.json.")
+    while True:
+        show_menu()
+        choice = input("Choose an option (1-6): ").strip()
 
-    display_all(inventory)
+        if choice == "1":
+            display_all(inventory)
+
+        elif choice == "2":
+            name = input("Product name: ").strip()
+            price = get_number("Price: ", float)
+            quantity = get_number("Quantity: ", int)
+            add_product(inventory, name, price, quantity)
+
+        elif choice == "3":
+            name = input("Product name: ").strip()
+            change = get_number("Change in stock (negative for sale, positive for restock): ", int)
+            update_stock(inventory, name, change)
+
+        elif choice == "4":
+            name = input("Product name to search: ").strip()
+            product = search_product(inventory, name)
+            if product:
+                print(f"Found: {product['name']} | ${product['price']:.2f} | Qty: {product['quantity']}")
+            else:
+                print("Product not found.")
+
+        elif choice == "5":
+            save_inventory(inventory)
+
+        elif choice == "6":
+            save_choice = input("Save before exiting? (y/n): ").strip().lower()
+            if save_choice == "y":
+                save_inventory(inventory)
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid option. Please choose 1-6.")
+
+
+if __name__ == "__main__":
+    main()
