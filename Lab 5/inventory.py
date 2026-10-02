@@ -1,3 +1,8 @@
+import json
+import os
+
+FILENAME = "inventory.json"
+
 # ---------- Data Representation ----------
 # The inventory is a dictionary holding:
 #   "products"     -> list of product dictionaries
@@ -71,11 +76,34 @@ def display_all(inv):
     print(f"\nTotal sales so far: ${total_sales:.2f}")
 
 
-# ---------- Quick test (Part 1) ----------
+# ---------- Data Persistence: Load ----------
+def load_inventory():
+    """Load inventory.json if it exists; otherwise start empty."""
+    if os.path.exists(FILENAME):
+        try:
+            with open(FILENAME, "r") as file:
+                data = json.load(file)
+            print(f"Loaded inventory from {FILENAME}.")
+            return data
+        except (json.JSONDecodeError, OSError):
+            print("Could not read inventory.json. Starting with empty inventory.")
+    else:
+        print("No saved inventory found. Starting with empty inventory.")
+    return {"products": [], "transactions": []}
+
+
+# ---------- Temporary test (Part 2) ----------
 if __name__ == "__main__":
-    add_product(inventory, "Notebook", 2.50, 100)
-    add_product(inventory, "Pen", 1.20, 250)
-    add_product(inventory, "Backpack", 35.00, 20)
-    update_stock(inventory, "Pen", -10)
-    print(search_product(inventory, "Backpack"))
+    inventory = load_inventory()
+
+    # First run: file doesn't exist, so create sample data and write it manually
+    # (temporary, because save_inventory() doesn't exist yet)
+    if not inventory["products"]:
+        add_product(inventory, "Notebook", 2.50, 100)
+        add_product(inventory, "Pen", 1.20, 250)
+        add_product(inventory, "Backpack", 35.00, 20)
+        with open(FILENAME, "w") as f:
+            json.dump(inventory, f, indent=4)
+        print("Sample data written to inventory.json.")
+
     display_all(inventory)
