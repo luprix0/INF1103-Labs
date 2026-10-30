@@ -15,6 +15,14 @@
             "stock": 10,
             "type": "physical",
             "weight": 20.0
+        },
+        {
+            "product_id": "P003",
+            "name": "Console",
+            "price": 100.0,
+            "stock": 10,
+            "type": "physical",
+            "weight": 5.0
         }
     ],
     "transactions": [
@@ -29,6 +37,12 @@
             "type": "initial stock",
             "quantity": 10,
             "amount": 5000.0
+        },
+        {
+            "product": "Console",
+            "type": "initial stock",
+            "quantity": 10,
+            "amount": 1000.0
         }
     ]
 }
