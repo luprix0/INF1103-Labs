@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Secrets (never commit these)
+.env
+*.session
+*.session-journal
+
+# Runtime data
+inventory.json
+data/records.json
+*.corrupt-*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
